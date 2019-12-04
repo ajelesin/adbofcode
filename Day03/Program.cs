@@ -36,7 +36,7 @@
                 var direction = step[0];
                 var stepLength = int.Parse(step.Substring(1));
 
-                while (stepLength-- > 0)
+                while (stepLength --> 0)
                 {
                     pnt.Item1 += dx[direction];
                     pnt.Item2 += dy[direction];
