@@ -53,15 +53,14 @@
 
         static int Count(Dictionary<string, List<string>> map, string v)
         {
-            if (!map.ContainsKey(v)) return 0;
-
             var cnt = 0;
             foreach (var v1 in map[v])
             {
                 cnt += Count(map, v1);
+                cnt += 1;
             }
 
-            return map[v].Count + cnt;
+            return cnt;
         }
 
         static void F2()
