@@ -20,32 +20,44 @@
                 .ToArray();
 
             int maxSignal = int.MinValue;
-            int[] seq = new int[5];
-            int minPhase = 5, maxPhase = 9;
+            int[] seq = new[] { 5, 6, 7, 8, 9 };
 
+            List<int[]> perms = new List<int[]>();
+            Perm(seq, 0, 4, perms);
 
-            for (seq[0] = minPhase; seq[0] <= maxPhase; seq[0] += 1)
-                for (seq[1] = minPhase; seq[1] <= maxPhase; seq[1] += 1)
-                    for (seq[2] = minPhase; seq[2] <= maxPhase; seq[2] += 1)
-                        for (seq[3] = minPhase; seq[3] <= maxPhase; seq[3] += 1)
-                            for (seq[4] = minPhase; seq[4] <= maxPhase; seq[4] += 1)
-                            {
-                                bool unique = true;
-                                for (var i = 0; i < 5; i += 1)
-                                    for (var j = 0; j < 5; j += 1)
-                                    {
-                                        if (i == j) continue;
-                                        if (seq[i] == seq[j])
-                                            unique = false;
-                                    }
+            foreach (var perm in perms)
+            {
 
-                                if (!unique) continue;
-
-                                var sig = Proc(seq, opcodes);
-                                if (sig > maxSignal) maxSignal = sig;
-                            }
+                var sig = Proc(perm, opcodes);
+                if (sig > maxSignal) maxSignal = sig;
+            }
 
             Console.WriteLine(maxSignal);
+        }
+
+        static void Perm(int[] A, int l, int r, List<int[]> perms)
+        {
+            if (l == r)
+            {
+                var a = A.Select(o => o).ToArray();
+                perms.Add(a);
+                return;
+            }
+
+            for (var i = l; i <= r; i += 1)
+            {
+                Swap(A, l, i);
+                Perm(A, l + 1, r, perms);
+                Swap(A, i, l);
+            }
+        }
+
+        static void Swap(int[] A, int i, int j)
+        {
+            if (i == j) return;
+            var tmp = A[i];
+            A[i] = A[j];
+            A[j] = tmp;
         }
 
         static int Proc(int[] seq, int[] opcodes)
