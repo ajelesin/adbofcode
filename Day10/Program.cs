@@ -102,6 +102,8 @@
 
             foreach (var p in points)
             {
+                if (p == origPoint) continue;
+
                 var a = Compare(origPoint, p);
                 if (!d.ContainsKey(a))
                 {
@@ -119,7 +121,7 @@
 
             (int x, int y, int d) el = (0, 0, 0);
             int i = 1;
-            while (i < 200)
+            while (i <= 200)
             {
                 foreach (var k in newd.Keys.OrderBy(o => o))
                 {
@@ -127,7 +129,7 @@
                     el = newd[k][0];
                     newd[k].RemoveAt(0);
                     i += 1;
-                    if (i == 200) break;
+                    if (i == 201) break;
                 }
             }
 
