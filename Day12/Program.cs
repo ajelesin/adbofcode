@@ -26,8 +26,14 @@ namespace Day12
                 .ToList();
 
             // position, velocity
+            var orig = File.ReadAllLines("..\\..\\..\\input.txt")
+                .Select(o => o.Trim('>'))
+                .Select(o => o.Split(','))
+                .Select(o => new[] { o[0].Split('=')[1], o[1].Split('=')[1], o[2].Split('=')[1] })
+                .Select(o => new[] { new[] { int.Parse(o[0]), int.Parse(o[1]), int.Parse(o[2]) }, new[] { 0, 0, 0 } })
+                .ToList();
 
-            int time = 0;
+            long time = 0;
             while (true)
             {
                 for (var i = 0; i < moons.Count; i+= 1)
@@ -65,9 +71,15 @@ namespace Day12
 
                 time += 1;
 
-                if (time == 1000)
+                if (Compare(orig, moons))
                 {
-                    break;
+                    Console.Write($"\rFinished at step: {time:#,##0}");
+                    Console.ReadLine();
+                }
+
+                if (time % 1_000_000 == 0)
+                {
+                    Console.Write($"\rStep: {time:#,##0}                  ");
                 }
             }
 
@@ -76,6 +88,23 @@ namespace Day12
             var E = Enumerable.Zip(P, K, (p, k) => p * k).Sum();
 
             Console.WriteLine(E);
+        }
+
+        static bool Compare(List<int[][]> orig, List<int[][]> compared)
+        {
+            for (var i = 0; i < orig.Count; i += 1)
+            {
+                for (var j = 0; j < 2; j += 1)
+                {
+                    for (var k = 0; k < 3; k += 1)
+                    {
+                        if (orig[i][j][k] != compared[i][j][k])
+                            return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }
