@@ -33,7 +33,14 @@ namespace Day13
             long relBase = 0;
             long score = 0;
 
+            input.Enqueue(0);
+            input.Enqueue(0);
+            input.Enqueue(0);
+
             opcodes[0] = 2;
+            (long, long) old = (0, 0);
+            (long, long) older = (0, 0);
+            (long, long) newxy = (0, 0);
 
             do
             {
@@ -51,6 +58,13 @@ namespace Day13
                         continue;
                     }
 
+                    if (tile == 4)
+                    {
+                        older = old;
+                        old = newxy;
+                        newxy = (x, y);
+                    }
+
                     if (!d.ContainsKey((x, y)))
                     {
                         d.Add((x, y), tile);
@@ -61,23 +75,58 @@ namespace Day13
                     }
                 }
 
-                Print(d, score);
+                //Print(d, score);
 
-                var k = Console.ReadKey();
-                if (k.Key == ConsoleKey.LeftArrow)
-                {
-                    input.Enqueue(-1);
-                }
-                else if (k.Key == ConsoleKey.RightArrow)
-                {
-                    input.Enqueue(1);
-                }
-                else
-                {
-                    input.Enqueue(0);
-                }
+                //ManualMode(input);
+                AutoMode(input, old, older, newxy);
+                //Console.ReadLine();
+                
             }
             while (opPointer >= 0);
+
+            Console.WriteLine(score);
+        }
+
+        static void AutoMode(Queue<long> input, (long, long) old, (long, long) older, (long, long) newxy)
+        {
+            if (newxy.Item1 > old.Item1 && old.Item1 < older.Item1)
+            {
+                input.Enqueue(1);
+                return;
+            }
+
+            if (newxy.Item1 < old.Item1 && old.Item1 > older.Item1)
+            {
+                input.Enqueue(-1);
+                return;
+            }
+
+            if (newxy.Item1 < old.Item1 && old.Item1 < older.Item1)
+            {
+                input.Enqueue(-1);
+                return;
+            }
+
+            input.Enqueue(1);
+
+        }
+
+        static void ManualMode(Queue<long> input)
+        {
+
+            var k = Console.ReadKey();
+            if (k.Key == ConsoleKey.LeftArrow)
+            {
+                input.Enqueue(-1);
+            }
+            else if (k.Key == ConsoleKey.RightArrow)
+            {
+                input.Enqueue(1);
+            }
+            else if (k.Key == ConsoleKey.DownArrow)
+            {
+                input.Enqueue(0);
+            }
         }
 
         static void Print(Dictionary<(long, long), long> d, long score)
