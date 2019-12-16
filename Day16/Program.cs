@@ -13,10 +13,11 @@ namespace Day16
                 .Select(o => o - 48)
                 .ToList();
 
-            signal = Enumerable.Range(0, 10_000).SelectMany(o => signal).ToList();
+            var signal2 = Enumerable.Range(0, 10_000).SelectMany(o => signal).ToList();
+            var offest2 = Convert.ToInt32(string.Join("", signal2.GetRange(0, 7)));
 
             var basePattern = new[] { 0, 1, 0, -1 };
-            int offset = Convert.ToInt32(string.Join("", signal.GetRange(0, 7)));
+            int offset = 0;
 
             var result = Enumerable.Range(0, signal.Count).ToList(); ;
 
@@ -71,6 +72,18 @@ namespace Day16
             }
 
             Console.WriteLine($"the signal: " + string.Join("", signal.GetRange(offset, 8)));
+            Console.ReadLine();
+
+            signal2 = signal2.GetRange(offest2, signal2.Count - offest2);
+            for (var phase = 0; phase < 100; phase += 1)
+            {
+                for (var i = signal2.Count - 2; i >= 0; i -= 1)
+                {
+                    signal2[i] = Math.Abs(signal2[i + 1] + signal2[i]) % 10;
+                }
+            }
+
+            Console.WriteLine($"this signal is " + string.Join("", signal2.GetRange(0, 8)));
             Console.ReadLine();
         }
     }
